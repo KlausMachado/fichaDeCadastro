@@ -11,7 +11,7 @@ Este é um projeto em Python que permite cadastrar, gerenciar e analisar dados d
 - **Apagar pessoa**: Remove uma pessoa do cadastro.
 - **Buscar pessoa**: Localiza uma pessoa pelo código.
 - **Listar pessoas**: Exibe todas as pessoas cadastradas.
-- **Analisar dados**: Ordena as pessoas por idade e identifica a mais velha e a mais nova.
+- **Analisar dados**: Ordena as pessoas por idade e genero.
 - **Armazenamento em CSV**: Os dados são salvos em um arquivo CSV para persistência.
 
 ---
@@ -101,6 +101,19 @@ Genero: Masculino
 
 Pessoa mais velha: João (25 anos)
 Pessoa mais nova: João (25 anos)
+
+Dados ordenados por gênero:
+
+As mulheres listadas no arquivo são:
+Código: 1, Nome: Ana
+Código: 3, Nome: Maria
+
+Os homens listados no arquivo são:
+Código: 2, Nome: João
+Código: 4, Nome: Carlos
+
+As pessoas não binárias listadas no arquivo são:
+Código: 5, Nome: Rita
 ```
 
 ---
