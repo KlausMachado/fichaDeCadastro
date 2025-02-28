@@ -1,6 +1,9 @@
 import csv
 import os
+from datetime import datetime
 from form import Register
+
+current_year = datetime.now().year
 
 # Cria arquivo CSV com os dados
 def save_records(records, file='records.csv'):
@@ -43,7 +46,7 @@ def add_record(records):
             code = int(input("Digite o código: "))
 
             # Verifica se o código já existe
-            codigo_existente = False
+            code_exist = False
             for record in records:
                 if record.code == code:
                     print("Erro: Código já existe. Por favor, insira um código único.")
@@ -52,17 +55,23 @@ def add_record(records):
 
             if not code_exist:
                 break  # Sai do loop se o código for novo
+        
 
         name = input("Digite o nome: ")
-        age = int(input("Digite a idade: "))
-        gender = input("Digite o gênero: ")
+        year = int(input("Digite o ano de nascimento (2000): "))
+        if year < current_year:
+            age = current_year - year
+        else:
+            print("O ano deve ser menor que o ano atual")
+            return  
+        gender = input("Digite o gênero: (\nF = Mulher cis;\nM = Homem cis;\nNB = Não binarie;\nMT = Mulher Trans;\nHT = Homem Trans;\nGQ = Genero Queer;) ").upper().strip()
 
         # Adiciona o novo registro
         records.append(Register(code, name, age, gender))
         save_records(records)
         print("Pessoa adicionada com sucesso!")
     except ValueError:
-        print("Erro: Idade e código devem ser números.")
+        print("Erro:Ano e código devem ser números.")
     except Exception as e:
         print(f"Erro ao adicionar pessoa: {e}") #{e} exibe o erro
 
@@ -73,8 +82,13 @@ def update_record(records):
         for record in records:
             if record.code == code:
                 record.name = input("Novo nome: ")
-                record.age = int(input("Nova idade: "))
-                record.gender = input("Novo gênero: ")
+                year = int(input("Novo ano de nascimento: "))
+                if year < current_year:
+                    record.age = current_year - year
+                else:
+                    print("O ano deve ser menor que o ano atual")
+                    return
+                record.gender = input("Novo gênero: ").upper().strip()
                 save_records(records)
                 print("Pessoa alterada com sucesso!")
                 return
@@ -122,19 +136,41 @@ def analyze_data(records):
             return
 
         # Ordena por idade
-        sorted_records = sorted(records, key=lambda x: x.age) #função lambda retorna dados de idade
+        sorted_records_age = sorted(records, key=lambda x: x.age) #função lambda retorna dados de idade
         print("\nDados ordenados por idade:")
-        for record in sorted_records:
-            print(record)
-
+        for record in sorted_records_age:
+            print(f"Código: {record.code}, Nome: {record.name}, Idade: {record.age}")            
+        
         # Identifica o mais velho e o mais novo
         oldest = max(records, key=lambda x: x.age)
         youngest = min(records, key=lambda x: x.age)
         print(f"\nPessoa mais velha: {oldest.name} ({oldest.age} anos)")
         print(f"Pessoa mais nova: {youngest.name} ({youngest.age} anos)")
-    except Exception as e:
-        print(f"Erro ao analisar dados: {e}")
 
+        # Ordena por gênero
+        sorted_records_gender = sorted(records, key=lambda x: x.gender)
+
+        # Dicionário para agrupar pessoas por gênero
+        grupos_genero = {
+            'F': "As mulheres listadas no arquivo são:",
+            'MT': "As mulheres listadas no arquivo são:",
+            'NB': "As pessoas não binárias listadas no arquivo são:",
+            'M': "Os homens listados no arquivo são:",
+            'HT': "Os homens listados no arquivo são:",
+        }
+
+        # Exibe os resultados agrupados por gênero
+        print("\nDados ordenados por gênero:")
+        genero_atual = None
+        for record in sorted_records_gender:
+            if record.gender != genero_atual:
+                genero_atual = record.gender
+                print(f"\n{grupos_genero.get(genero_atual, f'As pessoas do gênero {genero_atual} listadas são:')}")
+            print(f"Código: {record.code}, Nome: {record.name}")    
+    except Exception as e:
+        print(f"Erro ao analisar dados: {e}")   
+ 
+    
 # Lista todos os registros
 def list_records(records):
     try:
