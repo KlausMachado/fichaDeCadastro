@@ -5,7 +5,7 @@ from form import Register
 
 current_year = datetime.now().year
 
-def validate_born_year(year):
+def validate_year(year):
     #validando se o ano de nascimneto é maior que 1900 e menor que o ano atual
     return 1900 <= year <= current_year
     
@@ -14,7 +14,7 @@ def validate_code(code, records):
     return any(record.code == code for record in records)
     
 #funções de analise de dados:
-def analyze_gender(records):
+def sort_by_gender(records):
 
     if not records:
         print("Nenhum dado para analisar.")
@@ -41,7 +41,7 @@ def analyze_gender(records):
             print(f"\n{grupos_genero.get(genero_atual, f'As pessoas do gênero {genero_atual} listadas são:')}")
         print(f"Código: {record.code}, Nome: {record.name}")    
 
-def analyze_age(records):
+def sort_by_age(records):
     if not records:
         print("Nenhum dado para analisar.")
         return
@@ -73,7 +73,7 @@ def save_records(records, file='records.csv'):
         print(f"Erro ao salvar registros: {e}")
 
 # Carrega os dados do arquivo CSV
-def load_records(file='records.csv'):
+def load_csv(file='records.csv'):
     records = []
     try:
         if os.path.exists(file):  # Verifica se o arquivo existe
@@ -94,7 +94,7 @@ def load_records(file='records.csv'):
     return records
 
 # Adiciona um novo registro
-def add_record(records):
+def add_person(records):
     try:        
         code = int(input("Digite o código: "))
 
@@ -105,7 +105,7 @@ def add_record(records):
 
         name = input("Digite o nome: ")
         year = int(input("Digite o ano de nascimento (2000): "))
-        if not validate_born_year(year):
+        if not validate_year(year):
             print("Erro: Ano de nascimento invalido.")
             return    
         age = current_year - year
@@ -122,14 +122,14 @@ def add_record(records):
         print(f"Erro ao adicionar pessoa: {e}") #{e} exibe o erro
 
 # Altera um registro existente
-def update_record(records):
+def update_person(records):
     try:
         code = int(input("Digite o código da pessoa que deseja alterar: "))
         for record in records:
             if record.code == code:                        
                 record.name = input("Novo nome: ")
                 year = int(input("Novo ano de nascimento: "))
-                if not validate_born_year(year):
+                if not validate_year(year):
                     print("Erro: Ano de nascimento invalido.")
                     return
                     
@@ -145,7 +145,7 @@ def update_record(records):
         print(f"Erro ao alterar pessoa: {e}")
 
 # Remove um registro
-def delete_record(records):
+def delete_person(records):
     try:
         code = int(input("Digite o código da pessoa que deseja apagar: "))
         for record in records:
@@ -161,7 +161,7 @@ def delete_record(records):
         print(f"Erro ao apagar pessoa: {e}")
 
 # Busca um registro
-def find_record(records):
+def find_person(records):
     try:
         code = int(input("Digite o código da pessoa que deseja encontrar: "))
         for record in records:
@@ -177,15 +177,15 @@ def find_record(records):
 # Analisa os dados
 def analyze_data(records):
     try:
-        analyze_age(records)
-        analyze_gender(records)
+        sort_by_age(records)
+        sort_by_gender(records)
 
     except Exception as e:
         print(f"Erro ao analisar dados: {e}")   
  
     
 # Lista todos os registros
-def list_records(records):
+def list_people(records):
     try:
         if not records:
             print("Nenhum registro encontrado.")
